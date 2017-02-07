@@ -25,4 +25,24 @@ class Kele
     @my_mentor_availability = JSON.parse(response.body)
   end
 
+  def get_messages(num = 0)
+    if num == 0
+      response = self.class.get("https://www.bloc.io/api/v1/message_threads", headers: { "authorization" => @auth_token })
+    else
+      response = self.class.get("https://www.bloc.io/api/v1/message_threads", headers: { "authorization" => @auth_token }, body: {"page": "#{num}"})
+    end
+
+    @messages = JSON.parse(response.body)
+  end
+
+  def create_messages(sender, recipient_id, subject, stripped_text)
+      response = self.class.post("https://www.bloc.io/api/v1/messages", headers: { "authorization" => @auth_token },
+          body: {"sender": sender,
+                 "recipient_id": recipient_id,
+                 "subject": subject,
+                 "stripped-text": stripped_text,
+                 })
+      response
+  end
+
 end
